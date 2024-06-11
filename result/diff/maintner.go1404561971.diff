@@ -1,0 +1,30 @@
+--- /workspace/source/maintner/maintner.go
++++ /workspace/source/maintner/maintner.go
+@@ -327,6 +327,27 @@
+ 	if c.verbose {
+ 		log.Printf("mutation: %v", m)
+ 	}
++	// OpenRefactory Warning:
++	// Possible double locking of mutex!
++	//
++	//	File: github.go, Line: 1578
++	//		err := p.syncIssues(ctx, expectChanges)
++	//		Function githubRepoPoller:sync invokes function githubRepoPoller:syncIssues.
++	//	File: github.go, Line: 1812
++	//		p.c.addMutation(mp)
++	//		Function githubRepoPoller:syncIssues invokes function Corpus:addMutation.
++	//	File: maintner.go, Line: 330
++	//		c.mu.Lock()
++	//		In function Corpus:addMutation, mutex c.mu is acquired.
++	//	File: github.go, Line: 1587
++	//		err := p.syncReviews(ctx)
++	//		Function githubRepoPoller:sync invokes function githubRepoPoller:syncReviews.
++	//	File: github.go, Line: 2280
++	//		nums := p.issueNumbersWithStaleReviewsSync()
++	//		Function githubRepoPoller:syncReviews invokes function githubRepoPoller:issueNumbersWithStaleReviewsSync.
++	//	File: github.go, Line: 2264
++	//		p.c.mu.RLock()
++	//		In function githubRepoPoller:issueNumbersWithStaleReviewsSync, mutex p.c.mu is acquired.
+ 	c.mu.Lock()
+ 	c.processMutationLocked(m)
+ 	c.finishProcessing()

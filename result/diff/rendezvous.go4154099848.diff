@@ -1,0 +1,21 @@
+--- /workspace/source/internal/rendezvous/rendezvous.go
++++ /workspace/source/internal/rendezvous/rendezvous.go
+@@ -196,6 +196,18 @@
+ 
+ func connToClient(conn net.Conn, hostname, hostType string) (buildlet.Client, error) {
+ 	if err := (&http.Response{StatusCode: http.StatusSwitchingProtocols, Proto: "HTTP/1.1"}).Write(conn); err != nil {
++		// OpenRefactory Warning:
++		// Possible Log Injection!
++		// Path:
++		//	File: rendezvous.go, Line: 149
++		//		hostname = r.Header.Get(HeaderHostname)
++		//		Variable 'hostname' is assigned a tainted value from an external source.
++		//	File: rendezvous.go, Line: 187
++		//		connToClient(conn, hostname, "swarming_task")
++		//		Tainted information is passed through the function call via 'hostname' to the parameter 'hostname'
++		//	File: rendezvous.go, Line: 199
++		//		log.Printf("gomote: error writing upgrade response to reverse buildlet %s (%s) at %s: %v", hostname, hostType, conn.RemoteAddr(), err)
++		//		Tainted information is used in a sink.
+ 		log.Printf("gomote: error writing upgrade response to reverse buildlet %s (%s) at %s: %v", hostname, hostType, conn.RemoteAddr(), err)
+ 		conn.Close()
+ 		return nil, err

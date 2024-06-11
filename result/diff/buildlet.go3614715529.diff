@@ -1,0 +1,33 @@
+--- /workspace/source/cmd/buildlet/buildlet.go
++++ /workspace/source/cmd/buildlet/buildlet.go
+@@ -1005,6 +1005,30 @@
+ 		}
+ 	}
+ 	w.Header().Set(hdrProcessState, state)
++	// OpenRefactory Warning:
++	// Possible Log Injection!
++	// Path:
++	//	File: buildlet.go, Line: 919
++	//		r.FormValue("cmd")
++	//		Tainted information is coming from an external source.
++	//	File: buildlet.go, Line: 1019
++	//		return filepath.Clean(cmdArg), nil
++	//		A tainted value is returned from the function call.
++	//	File: buildlet.go, Line: 1022
++	//		relCmd, err := nativeRelPath(cmdArg)
++	//		Variable 'relCmd' is assigned a tainted value.
++	//	File: buildlet.go, Line: 919
++	//		absCmd, err := absExecCmd(r.FormValue("cmd"), sysMode)
++	//		Variable 'absCmd' is assigned a tainted value.
++	//	File: buildlet.go, Line: 925
++	//		absDir, err := absExecDir(r.FormValue("dir"), sysMode, filepath.Dir(absCmd))
++	//		Variable 'absDir' is assigned a tainted value.
++	//	File: buildlet.go, Line: 966
++	//		cmd = exec.Command(absCmd)
++	//		Variable 'cmd' is assigned a tainted value which is passed through a function call.
++	//	File: buildlet.go, Line: 1008
++	//		log.Printf("[%p] Run = %s, after %v", cmd, state, time.Since(t0))
++	//		Tainted information is used in a sink.
+ 	log.Printf("[%p] Run = %s, after %v", cmd, state, time.Since(t0))
+ }
+ 

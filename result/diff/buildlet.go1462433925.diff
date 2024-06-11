@@ -1,0 +1,21 @@
+--- /workspace/source/cmd/buildlet/buildlet.go
++++ /workspace/source/cmd/buildlet/buildlet.go
+@@ -572,6 +572,18 @@
+ 	zw := pargzip.NewWriter(w)
+ 	tw := tar.NewWriter(zw)
+ 	base := filepath.Join(*workDir, dir)
++	// OpenRefactory Warning:
++	// Possible Path Manipulation!
++	// Path:
++	//	File: buildlet.go, Line: 566
++	//		dir, err := nativeRelPath(r.FormValue("dir"))
++	//		Variable 'dir' is assigned a tainted value from an external source.
++	//	File: buildlet.go, Line: 574
++	//		base := filepath.Join(*workDir, dir)
++	//		Variable 'base' is assigned a tainted value which is passed through a function call.
++	//	File: buildlet.go, Line: 575
++	//		filepath.Walk(base, func(path string, fi os.FileInfo, err error) error {
++	//		Tainted information is used in a sink.
+ 	err = filepath.Walk(base, func(path string, fi os.FileInfo, err error) error {
+ 		if err != nil {
+ 			return err

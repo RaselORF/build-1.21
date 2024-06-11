@@ -1,0 +1,21 @@
+--- /workspace/source/cmd/buildlet/buildlet.go
++++ /workspace/source/cmd/buildlet/buildlet.go
+@@ -773,6 +773,18 @@
+ 			log.Printf("error extracting tarball into %s after %d files, %d dirs, %v: %v", dir, nFiles, len(madeDir), td, err)
+ 		}
+ 	}()
++	// OpenRefactory Warning:
++	// Possible Untrusted Deserializaiton!
++	// Path:
++	//	File: buildlet.go, Line: 658
++	//		tgz = r.Body
++	//		Variable 'tgz' is assigned a tainted value.
++	//	File: buildlet.go, Line: 688
++	//		untar(tgz, baseDir)
++	//		Tainted information is passed through the function call via 'tgz' to the parameter 'r'
++	//	File: buildlet.go, Line: 776
++	//		gzip.NewReader(r)
++	//		Tainted information is used in a sink.
+ 	zr, err := gzip.NewReader(r)
+ 	if err != nil {
+ 		return badRequestf("requires gzip-compressed body: %w", err)

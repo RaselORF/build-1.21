@@ -1,0 +1,17 @@
+--- /workspace/source/internal/internal.go
++++ /workspace/source/internal/internal.go
+@@ -75,6 +75,14 @@
+ 			_ = cmd.Process.Kill()
+ 		}
+ 
++		// OpenRefactory Warning:
++		// Possible blocking channel operation!
++		//
++		// In goroutine #1:
++		//	File: internal.go, Line: 78
++		//		errc <- err
++		//		In function WaitOrStop$1, there is a send operation.
++		//		But no matching receive operation is found on that channel from any other goroutine.
+ 		errc <- err
+ 	}()
+ 

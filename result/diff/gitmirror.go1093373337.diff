@@ -1,0 +1,12 @@
+--- /workspace/source/cmd/gitmirror/gitmirror.go
++++ /workspace/source/cmd/gitmirror/gitmirror.go
+@@ -52,6 +52,9 @@
+ 
+ 	if *flagHTTPAddr != "" {
+ 		go func() {
++			// OpenRefactory Warning:
++			// ListenAndServe does not set any timeout which may cause
++			// server to wait indefinitely.
+ 			err := http.ListenAndServe(*flagHTTPAddr, nil)
+ 			log.Fatalf("http server failed: %v", err)
+ 		}()

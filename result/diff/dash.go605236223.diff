@@ -1,0 +1,11 @@
+--- /workspace/source/cmd/coordinator/internal/legacydash/dash.go
++++ /workspace/source/cmd/coordinator/internal/legacydash/dash.go
+@@ -51,6 +51,8 @@
+ 	datastoreClient = dc
+ 	maintnerClient = mc
+ 	masterKey = key
++	// OpenRefactory Warning:
++	// Unnecessary self assignment to grpcServer
+ 	grpcServer = grpcServer
+ 
+ 	mux := http.NewServeMux()

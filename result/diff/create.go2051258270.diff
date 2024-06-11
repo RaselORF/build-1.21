@@ -1,0 +1,12 @@
+--- /workspace/source/cmd/gomote/create.go
++++ /workspace/source/cmd/gomote/create.go
+@@ -79,6 +79,9 @@
+ }
+ 
+ func swarmingBuilders() ([]string, error) {
++	// OpenRefactory Warning:
++	// Possible context leak. The returned cancel function
++	// should not be ignored.
+ 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+ 	client := gomoteServerClient(ctx)
+ 	resp, err := client.ListSwarmingBuilders(ctx, &protos.ListSwarmingBuildersRequest{})

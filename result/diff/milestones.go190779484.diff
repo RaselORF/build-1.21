@@ -1,0 +1,11 @@
+--- /workspace/source/internal/task/milestones.go
++++ /workspace/source/internal/task/milestones.go
+@@ -359,7 +359,7 @@
+ 	var open, closed []string
+ 	milestoneNumber := 0
+ 	for _, m := range query.Repository.Milestones.Nodes {
+-		if strings.ToLower(name) != strings.ToLower(m.Title) {
++		if !strings.EqualFold(name, m.Title) {
+ 			continue
+ 		}
+ 		if m.State == "OPEN" {

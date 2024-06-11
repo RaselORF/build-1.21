@@ -1,0 +1,18 @@
+--- /workspace/source/perf/app/dashboard.go
++++ /workspace/source/perf/app/dashboard.go
+@@ -640,6 +640,15 @@
+ 		}
+ 	}
+ 	if err == errBenchmarkNotFound {
++		// OpenRefactory Warning:
++		// Possible Log Injection!
++		// Path:
++		//	File: dashboard.go, Line: 624
++		//		benchmark := r.FormValue("benchmark")
++		//		Variable 'benchmark' is assigned a tainted value from an external source.
++		//	File: dashboard.go, Line: 643
++		//		log.Printf("Benchmark not found: %q", benchmark)
++		//		Tainted information is used in a sink.
+ 		log.Printf("Benchmark not found: %q", benchmark)
+ 		http.Error(w, "Benchmark not found", 404)
+ 		return

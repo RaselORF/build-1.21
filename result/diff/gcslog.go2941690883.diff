@@ -1,0 +1,17 @@
+--- /workspace/source/maintner/maintnerd/gcslog/gcslog.go
++++ /workspace/source/maintner/maintnerd/gcslog/gcslog.go
+@@ -564,6 +564,14 @@
+ func (gl *GCSLog) CopyFrom(src maintner.MutationSource) error {
+ 	gl.curNum = 0
+ 	ctx := context.Background()
++	// OpenRefactory Warning:
++	// Possible blocking channel operation!
++	//
++	// In goroutine #1:
++	//	File: gcslog.go, Line: 567
++	//		for e := range src.GetMutations(ctx) {
++	//		In function GCSLog:CopyFrom, there is a range operation.
++	//		But no matching close operation is found on that channel from any other goroutine.
+ 	for e := range src.GetMutations(ctx) {
+ 		if e.Err != nil {
+ 			log.Printf("Corpus.Initialize: %v", e.Err)

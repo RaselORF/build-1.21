@@ -1,0 +1,21 @@
+--- /workspace/source/internal/coordinator/pool/reverse.go
++++ /workspace/source/internal/coordinator/pool/reverse.go
+@@ -178,6 +178,18 @@
+ 	if b.client.IsBroken() {
+ 		return false
+ 	}
++	// OpenRefactory Warning:
++	// Possible double locking of mutex!
++	//
++	//	File: reverse.go, Line: 181
++	//		p.mu.Lock()
++	//		In function ReverseBuildletPool:healthCheckBuildlet, mutex p.mu is acquired.
++	//	File: reverse.go, Line: 177
++	//		defer p.updateQuotas()
++	//		Function ReverseBuildletPool:healthCheckBuildlet invokes function ReverseBuildletPool:updateQuotas.
++	//	File: reverse.go, Line: 417
++	//		p.mu.Lock()
++	//		In function ReverseBuildletPool:updateQuotas, mutex p.mu is acquired.
+ 	p.mu.Lock()
+ 	if b.inHealthCheck { // sanity check
+ 		panic("previous health check still running")

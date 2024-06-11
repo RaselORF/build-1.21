@@ -1,0 +1,45 @@
+--- /workspace/source/gerrit/auth.go
++++ /workspace/source/gerrit/auth.go
+@@ -242,6 +242,42 @@
+ func setDigestAuth(r *http.Request, username, password string, resp *http.Response, nc int) {
+ 	auth := getDigestAuth(username, password, resp)
+ 	authStr := getDigestAuthString(auth, r.URL, r.Method, nc)
++	// OpenRefactory Warning:
++	// Possible Hard Coded Key!
++	// Path:
++	//	File: auth.go, Line: 251
++	//		fmt.Fprintf(&buf, "%s:%s:%s", auth.Username, auth.Realm, auth.Password)
++	//		Tainted information passed through a function call.
++	//	File: auth.go, Line: 256
++	//		fmt.Fprintf(&buf, "%s:%s", method, url.Path)
++	//		Tainted information passed through a function call.
++	//	File: auth.go, Line: 261
++	//		hnc := "MTM3MDgw"
++	//		Variable 'hnc' is assigned a tainted value.
++	//	File: auth.go, Line: 264
++	//		fmt.Fprintf(&buf, "%s:%s:%s:%s:%s:%s", ha1, auth.NONCE, ncStr, hnc, auth.QOP, ha2)
++	//		Tainted information passed through a function call.
++	//	File: auth.go, Line: 269
++	//		fmt.Fprintf(&buf,
++	//		Tainted information passed through a function call.
++	//	File: auth.go, Line: 275
++	//		fmt.Fprintf(&buf, `, opaque="%s"`, auth.Opaque)
++	//		Tainted information passed through a function call.
++	//	File: auth.go, Line: 278
++	//		fmt.Fprintf(&buf, `, qop="%s", nc=%s, cnonce="%s"`, auth.QOP, ncStr, hnc)
++	//		Tainted information passed through a function call.
++	//	File: auth.go, Line: 281
++	//		fmt.Fprintf(&buf, `, algorithm="%s"`, auth.Algorithm)
++	//		Tainted information passed through a function call.
++	//	File: auth.go, Line: 284
++	//		return buf.String()
++	//		A tainted value is returned from the function call.
++	//	File: auth.go, Line: 244
++	//		authStr := getDigestAuthString(auth, r.URL, r.Method, nc)
++	//		Variable 'authStr' is assigned a tainted value.
++	//	File: auth.go, Line: 245
++	//		r.Header.Add("Authorization", authStr)
++	//		Tainted information is used in a sink.
+ 	r.Header.Add("Authorization", authStr)
+ }
+ 

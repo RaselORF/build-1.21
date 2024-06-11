@@ -1,0 +1,30 @@
+--- /workspace/source/maintner/github.go
++++ /workspace/source/maintner/github.go
+@@ -1961,6 +1961,27 @@
+ 			},
+ 		}
+ 
++		// OpenRefactory Warning:
++		// Possible double locking of mutex!
++		//
++		//	File: github.go, Line: 1581
++		//		err := p.syncComments(ctx)
++		//		Function githubRepoPoller:sync invokes function githubRepoPoller:syncComments.
++		//	File: github.go, Line: 1904
++		//		err := p.syncCommentsOnIssue(ctx, num)
++		//		Function githubRepoPoller:syncComments invokes function githubRepoPoller:syncCommentsOnIssue.
++		//	File: github.go, Line: 1964
++		//		p.c.mu.RLock()
++		//		In function githubRepoPoller:syncCommentsOnIssue, mutex p.c.mu is acquired.
++		//	File: github.go, Line: 1587
++		//		err := p.syncReviews(ctx)
++		//		Function githubRepoPoller:sync invokes function githubRepoPoller:syncReviews.
++		//	File: github.go, Line: 2280
++		//		nums := p.issueNumbersWithStaleReviewsSync()
++		//		Function githubRepoPoller:syncReviews invokes function githubRepoPoller:issueNumbersWithStaleReviewsSync.
++		//	File: github.go, Line: 2264
++		//		p.c.mu.RLock()
++		//		In function githubRepoPoller:issueNumbersWithStaleReviewsSync, mutex p.c.mu is acquired.
+ 		p.c.mu.RLock()
+ 		for _, ic := range ics {
+ 			if ic.ID == nil || ic.Body == nil || ic.User == nil || ic.CreatedAt == nil || ic.UpdatedAt == nil {

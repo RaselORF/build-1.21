@@ -1,0 +1,12 @@
+--- /workspace/source/devapp/owners/owners.go
++++ /workspace/source/devapp/owners/owners.go
+@@ -107,6 +107,9 @@
+ // Entry struct. If no Entry is matched for the path, the value for the key
+ // is nil.
+ func Handler(w http.ResponseWriter, r *http.Request) {
++	// OpenRefactory Warning:
++	// Setting 'Access-Control-Allow-Origin' to '*' will enable
++	// a loose CORS policy which is security sensitive.
+ 	w.Header().Set("Access-Control-Allow-Origin", "*")
+ 	w.Header().Set("Content-Type", "application/json")
+ 

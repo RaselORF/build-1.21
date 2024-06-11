@@ -1,0 +1,17 @@
+--- /workspace/source/cmd/coordinator/coordinator.go
++++ /workspace/source/cmd/coordinator/coordinator.go
+@@ -902,6 +902,14 @@
+ 	// existing post-submit build to take it over for a trybot, we
+ 	// want to make sure that reverse buildlets get assigned to
+ 	// trybots/slowbots first on start-up.
++	// OpenRefactory Warning:
++	// Possible blocking channel operation!
++	//
++	// In goroutine #1:
++	//	File: coordinator.go, Line: 905
++	//		for range ticker.C {
++	//		In function findWorkLoop, there is a range operation.
++	//		But no matching close operation is found on that channel from any other goroutine.
+ 	for range ticker.C {
+ 		if err := findWork(); err != nil {
+ 			log.Printf("failed to find new work: %v", err)

@@ -1,0 +1,18 @@
+--- /workspace/source/perf/app/dashboard.go
++++ /workspace/source/perf/app/dashboard.go
+@@ -589,6 +589,15 @@
+ 		// Thus, we just treat this as UTC.
+ 		end, err = time.Parse("2006-01-02T15:04", endParam)
+ 		if err != nil {
++			// OpenRefactory Warning:
++			// Possible Log Injection!
++			// Path:
++			//	File: dashboard.go, Line: 583
++			//		endParam := r.FormValue("end")
++			//		Variable 'endParam' is assigned a tainted value from an external source.
++			//	File: dashboard.go, Line: 592
++			//		log.Printf("Error parsing end %q: %v", endParam, err)
++			//		Tainted information is used in a sink.
+ 			log.Printf("Error parsing end %q: %v", endParam, err)
+ 			http.Error(w, "end parameter must be a timestamp similar to RFC3339 without a time zone, like 2000-12-31T15:00", http.StatusBadRequest)
+ 			return

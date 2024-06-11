@@ -1,0 +1,21 @@
+--- /workspace/source/internal/coordinator/pool/reverse.go
++++ /workspace/source/internal/coordinator/pool/reverse.go
+@@ -214,6 +214,18 @@
+ 		return false
+ 	}
+ 
++	// OpenRefactory Warning:
++	// Possible double locking of mutex!
++	//
++	//	File: reverse.go, Line: 217
++	//		p.mu.Lock()
++	//		In function ReverseBuildletPool:healthCheckBuildlet, mutex p.mu is acquired.
++	//	File: reverse.go, Line: 177
++	//		defer p.updateQuotas()
++	//		Function ReverseBuildletPool:healthCheckBuildlet invokes function ReverseBuildletPool:updateQuotas.
++	//	File: reverse.go, Line: 417
++	//		p.mu.Lock()
++	//		In function ReverseBuildletPool:updateQuotas, mutex p.mu is acquired.
+ 	p.mu.Lock()
+ 	defer p.mu.Unlock()
+ 

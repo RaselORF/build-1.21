@@ -1,0 +1,11 @@
+--- /workspace/source/buildlet/buildlet.go
++++ /workspace/source/buildlet/buildlet.go
+@@ -114,6 +114,8 @@
+ // is returned if it unable to connect to the buildlet. Each request is limited by either
+ // a five second limit or the timeout set in the context.
+ func probeBuildlet(ctx context.Context, buildletURL string, opts *VMOpts) error {
++	// OpenRefactory Warning:
++	// Setting InsecureSkipVerify to true will disable certificate verification.
+ 	cl := &http.Client{
+ 		Transport: &http.Transport{
+ 			Dial:              defaultDialer(),

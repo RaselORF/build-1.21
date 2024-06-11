@@ -1,0 +1,17 @@
+--- /workspace/source/maintner/maintnerd/maintnerd.go
++++ /workspace/source/maintner/maintnerd/maintnerd.go
+@@ -104,6 +104,14 @@
+ 		}
+ 		log.Printf("Syncing from https://maintner.golang.org/logs to %s", dir)
+ 		mutSrc := maintner.NewNetworkMutationSource("https://maintner.golang.org/logs", dir)
++		// OpenRefactory Warning:
++		// Possible blocking channel operation!
++		//
++		// In goroutine #1:
++		//	File: maintnerd.go, Line: 107
++		//		for evt := range mutSrc.GetMutations(ctx) {
++		//		In function main, there is a range operation.
++		//		But no matching close operation is found on that channel from any other goroutine.
+ 		for evt := range mutSrc.GetMutations(ctx) {
+ 			if evt.Err != nil {
+ 				log.Fatal(evt.Err)

@@ -1,0 +1,12 @@
+--- /workspace/source/cmd/buildlet/buildlet.go
++++ /workspace/source/cmd/buildlet/buildlet.go
+@@ -267,6 +267,9 @@
+ 			log.Fatalf("Error dialing server: %v", err)
+ 		}
+ 		srv := &http.Server{}
++		// OpenRefactory Warning:
++		// No read or write timeout is set to server config
++		// which may cause server to wait indefinitely.
+ 		err = srv.Serve(ln)
+ 		log.Printf("http.Serve on reverse connection complete: %v", err)
+ 		log.Printf("buildlet reverse mode exiting.")

@@ -1,0 +1,18 @@
+--- /workspace/source/perf/app/dashboard.go
++++ /workspace/source/perf/app/dashboard.go
+@@ -568,6 +568,15 @@
+ 		var err error
+ 		days, err = strconv.ParseUint(dayParam, 10, 32)
+ 		if err != nil {
++			// OpenRefactory Warning:
++			// Possible Log Injection!
++			// Path:
++			//	File: dashboard.go, Line: 566
++			//		dayParam := r.FormValue("days")
++			//		Variable 'dayParam' is assigned a tainted value from an external source.
++			//	File: dashboard.go, Line: 571
++			//		log.Printf("Error parsing days %q: %v", dayParam, err)
++			//		Tainted information is used in a sink.
+ 			log.Printf("Error parsing days %q: %v", dayParam, err)
+ 			http.Error(w, fmt.Sprintf("day parameter must be a positive integer less than or equal to %d", maxDays), http.StatusBadRequest)
+ 			return

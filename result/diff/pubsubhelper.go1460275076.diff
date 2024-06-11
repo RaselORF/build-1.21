@@ -1,0 +1,17 @@
+--- /workspace/source/cmd/pubsubhelper/pubsubhelper.go
++++ /workspace/source/cmd/pubsubhelper/pubsubhelper.go
+@@ -84,6 +84,14 @@
+ 			ReadTimeout:     time.Minute,
+ 		}
+ 		err := s.ListenAndServe()
++		// OpenRefactory Warning:
++		// Possible blocking channel operation!
++		//
++		// In goroutine #1:
++		//	File: pubsubhelper.go, Line: 87
++		//		errc <- fmt.Errorf("SMTP ListenAndServe: %v", err)
++		//		In function main$2, there is a send operation.
++		//		But no matching receive operation is found on that channel from any other goroutine.
+ 		errc <- fmt.Errorf("SMTP ListenAndServe: %v", err)
+ 	}()
+ 	log.Fatalln(https.ListenAndServe(ctx, http.DefaultServeMux))

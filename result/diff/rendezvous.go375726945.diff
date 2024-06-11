@@ -1,0 +1,21 @@
+--- /workspace/source/internal/rendezvous/rendezvous.go
++++ /workspace/source/internal/rendezvous/rendezvous.go
+@@ -240,6 +240,18 @@
+ 	tstatus := time.Now()
+ 	status, err := client.Status(context.Background())
+ 	if err != nil {
++		// OpenRefactory Warning:
++		// Possible Log Injection!
++		// Path:
++		//	File: rendezvous.go, Line: 149
++		//		hostname = r.Header.Get(HeaderHostname)
++		//		Variable 'hostname' is assigned a tainted value from an external source.
++		//	File: rendezvous.go, Line: 187
++		//		connToClient(conn, hostname, "swarming_task")
++		//		Tainted information is passed through the function call via 'hostname' to the parameter 'hostname'
++		//	File: rendezvous.go, Line: 243
++		//		log.Printf("Reverse connection %s/%s for %s did not answer status after %v: %v",
++		//		Tainted information is used in a sink.
+ 		log.Printf("Reverse connection %s/%s for %s did not answer status after %v: %v",
+ 			hostname, conn.RemoteAddr(), hostType, time.Since(tstatus), err)
+ 		conn.Close()

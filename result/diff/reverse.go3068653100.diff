@@ -1,0 +1,18 @@
+--- /workspace/source/internal/coordinator/pool/reverse.go
++++ /workspace/source/internal/coordinator/pool/reverse.go
+@@ -532,6 +532,15 @@
+ 	}
+ 
+ 	if err := (&http.Response{StatusCode: http.StatusSwitchingProtocols, Proto: "HTTP/1.1"}).Write(conn); err != nil {
++		// OpenRefactory Warning:
++		// Possible Log Injection!
++		// Path:
++		//	File: reverse.go, Line: 495
++		//		hostType = r.Header.Get("X-Go-Host-Type")
++		//		Variable 'hostType' is assigned a tainted value from an external source.
++		//	File: reverse.go, Line: 535
++		//		log.Printf("error writing upgrade response to reverse buildlet %s (%s) at %s: %v", hostname, hostType, r.RemoteAddr, err)
++		//		Tainted information is used in a sink.
+ 		log.Printf("error writing upgrade response to reverse buildlet %s (%s) at %s: %v", hostname, hostType, r.RemoteAddr, err)
+ 		conn.Close()
+ 		return

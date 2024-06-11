@@ -1,0 +1,30 @@
+--- /workspace/source/perf/app/dashboard.go
++++ /workspace/source/perf/app/dashboard.go
+@@ -107,6 +107,27 @@
+ }
+ 
+ func influxQuery(ctx context.Context, qc api.QueryAPI, query string) (*api.QueryTableResult, error) {
++	// OpenRefactory Warning:
++	// Possible Log Injection!
++	// Path:
++	//	File: dashboard.go, Line: 619
++	//		branch := r.FormValue("branch")
++	//		Variable 'branch' is assigned a tainted value from an external source.
++	//	File: dashboard.go, Line: 628
++	//		fetchDefaultBenchmarks(ctx, qc, start, end, repository, branch)
++	//		Tainted information is passed through the function call via 'branch' to the parameter 'branch'
++	//	File: dashboard.go, Line: 226
++	//		fetchNamedUnitBenchmark(ctx, qc, start, end, repository, branch, bench.name, bench.unit)
++	//		Tainted information is passed through the function call via 'branch' to the parameter 'branch'
++	//	File: dashboard.go, Line: 134
++	//		query := fmt.Sprintf(`
++	//		Variable 'query' is assigned a tainted value.
++	//	File: dashboard.go, Line: 149
++	//		influxQuery(ctx, qc, query)
++	//		Tainted information is passed through the function call via 'query' to the parameter 'query'
++	//	File: dashboard.go, Line: 110
++	//		log.Printf("InfluxDB query: %s", query)
++	//		Tainted information is used in a sink.
+ 	log.Printf("InfluxDB query: %s", query)
+ 	return qc.Query(ctx, query)
+ }

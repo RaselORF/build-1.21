@@ -1,0 +1,10 @@
+--- /workspace/source/cmd/coordinator/coordinator.go
++++ /workspace/source/cmd/coordinator/coordinator.go
+@@ -1611,6 +1611,7 @@
+ 	ts.canceled = true
+ 
+ 	for _, bs := range ts.builds {
++		bs := bs
+ 		go bs.cancelBuild()
+ 	}
+ }

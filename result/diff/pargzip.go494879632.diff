@@ -1,0 +1,17 @@
+--- /workspace/source/pargzip/pargzip.go
++++ /workspace/source/pargzip/pargzip.go
+@@ -172,6 +172,14 @@
+ 
+ 	w.bw.Flush()
+ 	close(w.chunkc)
++	// OpenRefactory Warning:
++	// Possible blocking channel operation!
++	//
++	// In goroutine #1:
++	//	File: pargzip.go, Line: 175
++	//		<-w.allWritten
++	//		In function Writer:Close, there is a receive operation.
++	//		But no matching send/close operation is found on that channel from any other goroutine.
+ 	<-w.allWritten // wait for writing goroutine to end
+ 
+ 	w.mu.Lock()

@@ -1,0 +1,18 @@
+--- /workspace/source/internal/coordinator/pool/reverse.go
++++ /workspace/source/internal/coordinator/pool/reverse.go
+@@ -581,6 +581,15 @@
+ 	tstatus := time.Now()
+ 	status, err := client.Status(context.Background())
+ 	if err != nil {
++		// OpenRefactory Warning:
++		// Possible Log Injection!
++		// Path:
++		//	File: reverse.go, Line: 495
++		//		hostType = r.Header.Get("X-Go-Host-Type")
++		//		Variable 'hostType' is assigned a tainted value from an external source.
++		//	File: reverse.go, Line: 584
++		//		log.Printf("Reverse connection %s/%s for %s did not answer status after %v: %v",
++		//		Tainted information is used in a sink.
+ 		log.Printf("Reverse connection %s/%s for %s did not answer status after %v: %v",
+ 			hostname, r.RemoteAddr, hostType, time.Since(tstatus), err)
+ 		conn.Close()

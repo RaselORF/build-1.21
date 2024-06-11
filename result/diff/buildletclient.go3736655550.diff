@@ -1,0 +1,27 @@
+--- /workspace/source/buildlet/buildletclient.go
++++ /workspace/source/buildlet/buildletclient.go
+@@ -382,6 +382,24 @@
+ 		go cleanup()
+ 		return nil, c.deadErr
+ 	case <-timer.C:
++		// OpenRefactory Warning:
++		// Possible Log Injection!
++		// Path:
++		//	File: reverse.go, Line: 498
++		//		hostname = r.Header.Get("X-Go-Builder-Hostname")
++		//		Variable 'hostname' is assigned a tainted value from an external source.
++		//	File: reverse.go, Line: 547
++		//		client := buildlet.NewClient(hostname, buildlet.NoKeyPair)
++		//		Variable 'client' is assigned a tainted value.
++		//	File: reverse.go, Line: 582
++		//		client.Status(context.Background())
++		//		Tainted information is passed through the function call via 'client' to the receiver 'c' through the field 'ipPort' (from type client)
++		//	File: buildletclient.go, Line: 668
++		//		c.doHeaderTimeout(req, 20*time.Second)
++		//		Tainted information is passed through the function call via 'c' to the receiver 'c' through the field 'ipPort' (from type client)
++		//	File: buildletclient.go, Line: 385
++		//		log.Printf("%s: timeout after %v waiting for headers for %v", c.Name(), max, req.URL.Path)
++		//		Tainted information is used in a sink.
+ 		log.Printf("%s: timeout after %v waiting for headers for %v", c.Name(), max, req.URL.Path)
+ 		go cleanup()
+ 		return nil, errHeaderTimeout

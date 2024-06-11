@@ -1,0 +1,17 @@
+--- /workspace/source/cmd/makemac/main.go
++++ /workspace/source/cmd/makemac/main.go
+@@ -38,6 +38,14 @@
+ 	}
+ 
+ 	t := time.NewTicker(*period)
++	// OpenRefactory Warning:
++	// Possible blocking channel operation!
++	//
++	// In goroutine #1:
++	//	File: main.go, Line: 41
++	//		for range t.C {
++	//		In function main, there is a range operation.
++	//		But no matching close operation is found on that channel from any other goroutine.
+ 	for range t.C {
+ 		checkAndRenewLeases(c)
+ 	}

@@ -1,0 +1,17 @@
+--- /workspace/source/internal/coordinator/remote/ssh.go
++++ /workspace/source/internal/coordinator/remote/ssh.go
+@@ -430,6 +430,14 @@
+ 	}
+ 	defer f.Close()
+ 	go func() {
++		// OpenRefactory Warning:
++		// Possible blocking channel operation!
++		//
++		// In goroutine #1:
++		//	File: ssh.go, Line: 433
++		//		for win := range winCh {
++		//		In function SSHServer:HandleIncomingSSHPostAuthSwarming$3, there is a range operation.
++		//		But no matching close operation is found on that channel from any other goroutine.
+ 		for win := range winCh {
+ 			setWinsize(f, win.Width, win.Height)
+ 		}

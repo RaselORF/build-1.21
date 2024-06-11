@@ -1,0 +1,15 @@
+--- /workspace/source/gerrit/auth.go
++++ /workspace/source/gerrit/auth.go
+@@ -285,6 +285,12 @@
+ }
+ 
+ func (a digestAuth) setAuth(c *Client, r *http.Request) error {
++	// OpenRefactory Warning:
++	// Possible Server-Side Request Forgery (SSRF)!
++	// Path:
++	//	File: auth.go, Line: 288
++	//		http.Get(r.URL.String())
++	//		Tainted information is passed through a function call and is used in a sink.
+ 	resp, err := http.Get(r.URL.String())
+ 	if err != nil {
+ 		return err

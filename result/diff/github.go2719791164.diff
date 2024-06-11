@@ -1,0 +1,30 @@
+--- /workspace/source/maintner/github.go
++++ /workspace/source/maintner/github.go
+@@ -2057,6 +2057,27 @@
+ 
+ func (p *githubRepoPoller) syncEventsOnIssue(ctx context.Context, issueNum int32) error {
+ 	const perPage = 100
++	// OpenRefactory Warning:
++	// Possible double locking of mutex!
++	//
++	//	File: github.go, Line: 1584
++	//		err := p.syncEvents(ctx)
++	//		Function githubRepoPoller:sync invokes function githubRepoPoller:syncEvents.
++	//	File: github.go, Line: 2049
++	//		err := p.syncEventsOnIssue(ctx, num)
++	//		Function githubRepoPoller:syncEvents invokes function githubRepoPoller:syncEventsOnIssue.
++	//	File: github.go, Line: 2060
++	//		p.c.mu.RLock()
++	//		In function githubRepoPoller:syncEventsOnIssue, mutex p.c.mu is acquired.
++	//	File: github.go, Line: 1587
++	//		err := p.syncReviews(ctx)
++	//		Function githubRepoPoller:sync invokes function githubRepoPoller:syncReviews.
++	//	File: github.go, Line: 2280
++	//		nums := p.issueNumbersWithStaleReviewsSync()
++	//		Function githubRepoPoller:syncReviews invokes function githubRepoPoller:issueNumbersWithStaleReviewsSync.
++	//	File: github.go, Line: 2264
++	//		p.c.mu.RLock()
++	//		In function githubRepoPoller:issueNumbersWithStaleReviewsSync, mutex p.c.mu is acquired.
+ 	p.c.mu.RLock()
+ 	gi := p.gr.issues[issueNum]
+ 	if gi == nil {

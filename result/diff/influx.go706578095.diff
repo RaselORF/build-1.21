@@ -1,0 +1,15 @@
+--- /workspace/source/perf/app/influx.go
++++ /workspace/source/perf/app/influx.go
+@@ -378,8 +378,10 @@
+ 					continue
+ 				}
+ 
+-				measurement := "benchmark-result"                  // measurement
+-				benchmarkName = benchmarkName + suffix             // tag
++				measurement := "benchmark-result"      // measurement
++				benchmarkName = benchmarkName + suffix // tag
++				// OpenRefactory Warning:
++				// Unnecessary self assignment to series
+ 				series = series                                    // time
+ 				center, low, high := sum.Center, sum.Low, sum.High // fields
+ 				unit := cs.Unit                                    // tag

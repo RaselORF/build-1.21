@@ -1,0 +1,11 @@
+--- /workspace/source/perfdata/localperfdata/app.go
++++ /workspace/source/perfdata/localperfdata/app.go
+@@ -61,5 +61,8 @@
+ 
+ 	log.Printf("Listening on %s", *addr)
+ 
++	// OpenRefactory Warning:
++	// ListenAndServe does not set any timeout which may cause
++	// server to wait indefinitely.
+ 	log.Fatal(http.ListenAndServe(*addr, nil))
+ }

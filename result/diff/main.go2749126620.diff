@@ -1,0 +1,11 @@
+--- /workspace/source/influx/main.go
++++ /workspace/source/influx/main.go
+@@ -153,6 +153,8 @@
+ 	}
+ 
+ 	// Connecting via localhost with self-signed certs, so no cert checks.
++	// OpenRefactory Warning:
++	// Setting InsecureSkipVerify to true will disable certificate verification.
+ 	client := &http.Client{
+ 		Transport: &http.Transport{
+ 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},

@@ -1,0 +1,33 @@
+--- /workspace/source/cmd/fetchlogs/fetchlogs.go
++++ /workspace/source/cmd/fetchlogs/fetchlogs.go
+@@ -377,6 +377,30 @@
+ 	goProjectMu.Lock()
+ 	defer goProjectMu.Unlock()
+ 	if policy == forceRefresh || (cachedGoProject == nil && goProjectErr == nil) {
++		// OpenRefactory Warning:
++		// Possible data race!
++		//
++		// In goroutine #1:
++		//	File: fetchlogs.go, Line: 92
++		//		for _, repo := range parseRepoFlag() {
++		//		Function main invokes function parseRepoFlag.
++		//	File: fetchlogs.go, Line: 254
++		//		go func() {
++		//		Function parseRepoFlag invokes function parseRepoFlag$2 in a new goroutine.
++		//	File: fetchlogs.go, Line: 263
++		//		_ = goProject(useCached)
++		//		Function parseRepoFlag$2 invokes function goProject.
++		//	File: fetchlogs.go, Line: 380
++		//		cachedGoProject, goProjectErr = getGoProject(context.Background())
++		//		In function goProject, variable goProjectErr is written.
++		//
++		// In goroutine #2:
++		//	File: fetchlogs.go, Line: 145
++		//		commit, err := goProject(useCached).GitCommit(rev.GoRevision)
++		//		Function main invokes function goProject.
++		//	File: fetchlogs.go, Line: 379
++		//		if policy == forceRefresh || (cachedGoProject == nil && goProjectErr == nil) {
++		//		In function goProject, variable goProjectErr is read.
+ 		cachedGoProject, goProjectErr = getGoProject(context.Background())
+ 	}
+ 

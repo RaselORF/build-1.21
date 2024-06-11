@@ -1,0 +1,24 @@
+--- /workspace/source/cmd/buildlet/buildlet.go
++++ /workspace/source/cmd/buildlet/buildlet.go
+@@ -777,6 +777,21 @@
+ 	if err != nil {
+ 		return badRequestf("requires gzip-compressed body: %w", err)
+ 	}
++	// OpenRefactory Warning:
++	// Possible Untrusted Deserializaiton!
++	// Path:
++	//	File: buildlet.go, Line: 658
++	//		tgz = r.Body
++	//		Variable 'tgz' is assigned a tainted value.
++	//	File: buildlet.go, Line: 688
++	//		untar(tgz, baseDir)
++	//		Tainted information is passed through the function call via 'tgz' to the parameter 'r'
++	//	File: buildlet.go, Line: 776
++	//		zr, err := gzip.NewReader(r)
++	//		Variable 'zr' is assigned a tainted value which is passed through a function call.
++	//	File: buildlet.go, Line: 780
++	//		tar.NewReader(zr)
++	//		Tainted information is used in a sink.
+ 	tr := tar.NewReader(zr)
+ 	loggedChtimesError := false
+ 	for {

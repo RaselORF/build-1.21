@@ -1,0 +1,17 @@
+--- /workspace/source/cmd/securitybot/main.go
++++ /workspace/source/cmd/securitybot/main.go
+@@ -318,6 +318,14 @@
+ }
+ 
+ func (g *gcsLiveWriter) Close() error {
++	// OpenRefactory Warning:
++	// Possible blocking channel operation!
++	//
++	// In goroutine #1:
++	//	File: main.go, Line: 321
++	//		g.stop <- true
++	//		In function gcsLiveWriter:Close, there is a send operation.
++	//		But no matching receive operation is found on that channel from any other goroutine.
+ 	g.stop <- true
+ 	return <-g.err
+ }

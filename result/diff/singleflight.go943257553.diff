@@ -1,0 +1,17 @@
+--- /workspace/source/internal/singleflight/singleflight.go
++++ /workspace/source/internal/singleflight/singleflight.go
+@@ -96,6 +96,14 @@
+ 	g.mu.Lock()
+ 	delete(g.m, key)
+ 	for _, ch := range c.chans {
++		// OpenRefactory Warning:
++		// Possible blocking channel operation!
++		//
++		// In goroutine #1:
++		//	File: singleflight.go, Line: 99
++		//		ch <- Result{c.val, c.err, c.dups > 0}
++		//		In function Group:doCall, there is a send operation.
++		//		But no matching receive operation is found on that channel from any other goroutine.
+ 		ch <- Result{c.val, c.err, c.dups > 0}
+ 	}
+ 	g.mu.Unlock()

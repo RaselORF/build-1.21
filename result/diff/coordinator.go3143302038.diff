@@ -1,0 +1,12 @@
+--- /workspace/source/cmd/coordinator/coordinator.go
++++ /workspace/source/cmd/coordinator/coordinator.go
+@@ -653,6 +653,9 @@
+ 
+ // tss is a clone that does not require ts' lock.
+ func serveTryStatusJSON(w http.ResponseWriter, r *http.Request, ts *trySet, tss trySetState) {
++	// OpenRefactory Warning:
++	// Setting 'Access-Control-Allow-Origin' to '*' will enable
++	// a loose CORS policy which is security sensitive.
+ 	w.Header().Set("Access-Control-Allow-Origin", "*")
+ 	if r.Method == "OPTIONS" {
+ 		// This is likely a pre-flight CORS request.

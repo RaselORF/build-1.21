@@ -1,0 +1,18 @@
+--- /workspace/source/internal/coordinator/pool/reverse.go
++++ /workspace/source/internal/coordinator/pool/reverse.go
+@@ -591,6 +591,15 @@
+ 		conn.Close()
+ 		return
+ 	}
++	// OpenRefactory Warning:
++	// Possible Log Injection!
++	// Path:
++	//	File: reverse.go, Line: 495
++	//		hostType = r.Header.Get("X-Go-Host-Type")
++	//		Variable 'hostType' is assigned a tainted value from an external source.
++	//	File: reverse.go, Line: 594
++	//		log.Printf("Buildlet %s/%s: %+v for %s", hostname, r.RemoteAddr, status, hostType)
++	//		Tainted information is used in a sink.
+ 	log.Printf("Buildlet %s/%s: %+v for %s", hostname, r.RemoteAddr, status, hostType)
+ 
+ 	now := time.Now()

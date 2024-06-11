@@ -1,0 +1,18 @@
+--- /workspace/source/cmd/buildlet/buildlet.go
++++ /workspace/source/cmd/buildlet/buildlet.go
+@@ -678,6 +678,15 @@
+ 			return
+ 		}
+ 		tgz = res.Body
++		// OpenRefactory Warning:
++		// Possible Log Injection!
++		// Path:
++		//	File: buildlet.go, Line: 661
++		//		urlStr = r.FormValue("url")
++		//		Variable 'urlStr' is assigned a tainted value from an external source.
++		//	File: buildlet.go, Line: 681
++		//		log.Printf("writetgz: untarring %s (got headers in %v) into %s", urlStr, time.Since(t0), baseDir)
++		//		Tainted information is used in a sink.
+ 		log.Printf("writetgz: untarring %s (got headers in %v) into %s", urlStr, time.Since(t0), baseDir)
+ 	default:
+ 		log.Printf("writetgz: invalid method %q", r.Method)

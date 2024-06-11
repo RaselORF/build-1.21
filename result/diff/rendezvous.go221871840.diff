@@ -1,0 +1,21 @@
+--- /workspace/source/internal/rendezvous/rendezvous.go
++++ /workspace/source/internal/rendezvous/rendezvous.go
+@@ -245,6 +245,18 @@
+ 		conn.Close()
+ 		return nil, err
+ 	}
++	// OpenRefactory Warning:
++	// Possible Log Injection!
++	// Path:
++	//	File: rendezvous.go, Line: 149
++	//		hostname = r.Header.Get(HeaderHostname)
++	//		Variable 'hostname' is assigned a tainted value from an external source.
++	//	File: rendezvous.go, Line: 187
++	//		connToClient(conn, hostname, "swarming_task")
++	//		Tainted information is passed through the function call via 'hostname' to the parameter 'hostname'
++	//	File: rendezvous.go, Line: 248
++	//		log.Printf("Buildlet %s/%s: %+v for %s", hostname, conn.RemoteAddr(), status, hostType)
++	//		Tainted information is used in a sink.
+ 	log.Printf("Buildlet %s/%s: %+v for %s", hostname, conn.RemoteAddr(), status, hostType)
+ 	return client, nil
+ }

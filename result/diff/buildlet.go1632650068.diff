@@ -1,0 +1,18 @@
+--- /workspace/source/cmd/buildlet/buildlet.go
++++ /workspace/source/cmd/buildlet/buildlet.go
+@@ -667,6 +667,15 @@
+ 		t0 := time.Now()
+ 		res, err := http.Get(urlStr)
+ 		if err != nil {
++			// OpenRefactory Warning:
++			// Possible Log Injection!
++			// Path:
++			//	File: buildlet.go, Line: 661
++			//		urlStr = r.FormValue("url")
++			//		Variable 'urlStr' is assigned a tainted value from an external source.
++			//	File: buildlet.go, Line: 670
++			//		log.Printf("writetgz: failed to fetch tgz URL %s: %v", urlStr, err)
++			//		Tainted information is used in a sink.
+ 			log.Printf("writetgz: failed to fetch tgz URL %s: %v", urlStr, err)
+ 			http.Error(w, fmt.Sprintf("fetching URL %s: %v", urlStr, err), http.StatusInternalServerError)
+ 			return

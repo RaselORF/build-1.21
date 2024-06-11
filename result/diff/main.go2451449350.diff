@@ -1,0 +1,11 @@
+--- /workspace/source/influx/main.go
++++ /workspace/source/influx/main.go
+@@ -118,6 +118,8 @@
+ func newInfluxClient(ctx context.Context) influxdb2.Client {
+ 	// We used a self-signed certificate.
+ 	options := influxdb2.DefaultOptions()
++	// OpenRefactory Warning:
++	// Setting InsecureSkipVerify to true will disable certificate verification.
+ 	options.SetTLSConfig(&tls.Config{InsecureSkipVerify: true})
+ 	client := influxdb2.NewClientWithOptions(influxURL, "", options)
+ 

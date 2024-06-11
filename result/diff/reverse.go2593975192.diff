@@ -1,0 +1,18 @@
+--- /workspace/source/internal/coordinator/pool/reverse.go
++++ /workspace/source/internal/coordinator/pool/reverse.go
+@@ -537,6 +537,15 @@
+ 		return
+ 	}
+ 
++	// OpenRefactory Warning:
++	// Possible Log Injection!
++	// Path:
++	//	File: reverse.go, Line: 498
++	//		hostname = r.Header.Get("X-Go-Builder-Hostname")
++	//		Variable 'hostname' is assigned a tainted value from an external source.
++	//	File: reverse.go, Line: 540
++	//		log.Printf("Registering reverse buildlet %q (%s) for host type %v; buildletVersion=%v",
++	//		Tainted information is used in a sink.
+ 	log.Printf("Registering reverse buildlet %q (%s) for host type %v; buildletVersion=%v",
+ 		hostname, r.RemoteAddr, hostType, buildletVersion)
+ 

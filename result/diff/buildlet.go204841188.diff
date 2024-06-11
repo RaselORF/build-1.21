@@ -1,0 +1,18 @@
+--- /workspace/source/cmd/buildlet/buildlet.go
++++ /workspace/source/cmd/buildlet/buildlet.go
+@@ -665,6 +665,15 @@
+ 			return
+ 		}
+ 		t0 := time.Now()
++		// OpenRefactory Warning:
++		// Possible Server-Side Request Forgery (SSRF)!
++		// Path:
++		//	File: buildlet.go, Line: 661
++		//		urlStr = r.FormValue("url")
++		//		Variable 'urlStr' is assigned a tainted value from an external source.
++		//	File: buildlet.go, Line: 668
++		//		http.Get(urlStr)
++		//		Tainted information is used in a sink.
+ 		res, err := http.Get(urlStr)
+ 		if err != nil {
+ 			log.Printf("writetgz: failed to fetch tgz URL %s: %v", urlStr, err)

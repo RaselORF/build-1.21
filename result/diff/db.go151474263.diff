@@ -1,0 +1,26 @@
+--- /workspace/source/perfdata/db/db.go
++++ /workspace/source/perfdata/db/db.go
+@@ -43,6 +43,23 @@
+ // explicitly supported; other database engines will receive MySQL
+ // query syntax which may or may not be compatible.
+ func OpenSQL(driverName, dataSourceName string) (*DB, error) {
++	// OpenRefactory Warning:
++	// Possible Hard Coded Password!
++	// The following code uses a hard coded string which may contain a password.
++	// Check that the string does not contain a password.
++	// Path:
++	//	File: nocloud.go, Line: 15
++	//		return "sqlite3", ":memory:", nil
++	//		A tainted value is returned from the function call.
++	//	File: dbtest.go, Line: 20
++	//		driverName, dataSourceName, cloudCleanup := createEmptyDB(t)
++	//		Variable 'dataSourceName' is assigned a tainted value.
++	//	File: dbtest.go, Line: 21
++	//		db.OpenSQL(driverName, dataSourceName)
++	//		Tainted information is passed through the function call via 'dataSourceName' to the parameter 'dataSourceName'
++	//	File: db.go, Line: 46
++	//		sql.Open(driverName, dataSourceName)
++	//		Tainted information is used in a sink.
+ 	db, err := sql.Open(driverName, dataSourceName)
+ 	if err != nil {
+ 		return nil, err

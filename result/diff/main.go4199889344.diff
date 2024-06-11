@@ -1,0 +1,27 @@
+--- /workspace/source/influx/main.go
++++ /workspace/source/influx/main.go
+@@ -187,6 +187,24 @@
+ 	if err != nil {
+ 		log.Printf("Error fetching GCP project ID: %v", err)
+ 		log.Printf("Assuming I am running locally.")
++		// OpenRefactory Warning:
++		// Possible Sensitive Data Leak!
++		// Path:
++		//	File: main.go, Line: 241
++		//		adminPass, err := generatePassword()
++		//		Variable 'adminPass' is assigned a tainted value.
++		//	File: main.go, Line: 296
++		//		return influxSecrets{
++		//		A tainted value is returned from the function call.
++		//	File: main.go, Line: 103
++		//		secrets, err := setupUsers(ctx, client)
++		//		Variable 'secrets' is assigned a tainted value.
++		//	File: main.go, Line: 108
++		//		secrets.recordOrLog(ctx)
++		//		Tainted information is passed through the function call via 'secrets' to the receiver 'i' through the field 'adminPass' (from type influxSecrets)
++		//	File: main.go, Line: 190
++		//		log.Printf("Admin password: %s", i.adminPass)
++		//		Tainted information is used in a sink.
+ 		log.Printf("Admin password: %s", i.adminPass)
+ 		log.Printf("Admin token: %s", i.adminToken)
+ 		log.Printf("Reader password: %s", i.readerPass)

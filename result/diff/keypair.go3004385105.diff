@@ -1,0 +1,11 @@
+--- /workspace/source/buildlet/keypair.go
++++ /workspace/source/buildlet/keypair.go
+@@ -58,6 +58,8 @@
+ 		if err != nil {
+ 			return nil, err
+ 		}
++		// OpenRefactory Warning:
++		// Setting InsecureSkipVerify to true will disable certificate verification.
+ 		tlsConn := tls.Client(plainConn, &tls.Config{InsecureSkipVerify: true})
+ 		if err := tlsConn.Handshake(); err != nil {
+ 			return nil, err

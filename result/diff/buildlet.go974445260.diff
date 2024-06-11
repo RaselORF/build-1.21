@@ -1,0 +1,12 @@
+--- /workspace/source/cmd/buildlet/buildlet.go
++++ /workspace/source/cmd/buildlet/buildlet.go
+@@ -2028,6 +2028,9 @@
+ func serveReverseHealth() error {
+ 	m := &http.ServeMux{}
+ 	m.HandleFunc("/healthz", handleHealthz)
++	// OpenRefactory Warning:
++	// ListenAndServe does not set any timeout which may cause
++	// server to wait indefinitely.
+ 	return http.ListenAndServe(*healthAddr, m)
+ }
+ 

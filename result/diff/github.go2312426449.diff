@@ -1,0 +1,30 @@
+--- /workspace/source/maintner/github.go
++++ /workspace/source/maintner/github.go
+@@ -1878,6 +1878,27 @@
+ }
+ 
+ func (p *githubRepoPoller) issueNumbersWithStaleCommentSync() (issueNums []int32) {
++	// OpenRefactory Warning:
++	// Possible double locking of mutex!
++	//
++	//	File: github.go, Line: 1581
++	//		err := p.syncComments(ctx)
++	//		Function githubRepoPoller:sync invokes function githubRepoPoller:syncComments.
++	//	File: github.go, Line: 1897
++	//		nums := p.issueNumbersWithStaleCommentSync()
++	//		Function githubRepoPoller:syncComments invokes function githubRepoPoller:issueNumbersWithStaleCommentSync.
++	//	File: github.go, Line: 1881
++	//		p.c.mu.RLock()
++	//		In function githubRepoPoller:issueNumbersWithStaleCommentSync, mutex p.c.mu is acquired.
++	//	File: github.go, Line: 1587
++	//		err := p.syncReviews(ctx)
++	//		Function githubRepoPoller:sync invokes function githubRepoPoller:syncReviews.
++	//	File: github.go, Line: 2280
++	//		nums := p.issueNumbersWithStaleReviewsSync()
++	//		Function githubRepoPoller:syncReviews invokes function githubRepoPoller:issueNumbersWithStaleReviewsSync.
++	//	File: github.go, Line: 2264
++	//		p.c.mu.RLock()
++	//		In function githubRepoPoller:issueNumbersWithStaleReviewsSync, mutex p.c.mu is acquired.
+ 	p.c.mu.RLock()
+ 	defer p.c.mu.RUnlock()
+ 

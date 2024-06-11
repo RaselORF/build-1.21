@@ -1,0 +1,17 @@
+--- /workspace/source/pargzip/pargzip.go
++++ /workspace/source/pargzip/pargzip.go
+@@ -105,6 +105,14 @@
+ 	w.sem = make(chan bool, w.Parallel)
+ 	go func() {
+ 		defer close(w.allWritten)
++		// OpenRefactory Warning:
++		// Possible blocking channel operation!
++		//
++		// In goroutine #1:
++		//	File: pargzip.go, Line: 108
++		//		for c := range w.chunkc {
++		//		In function Writer:init$1, there is a range operation.
++		//		But no matching close operation is found on that channel from any other goroutine.
+ 		for c := range w.chunkc {
+ 			if err := w.writeCompressedChunk(c); err != nil {
+ 				close(w.wasWriteErr)

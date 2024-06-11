@@ -1,0 +1,12 @@
+--- /workspace/source/cmd/coordinator/modproxy.go
++++ /workspace/source/cmd/coordinator/modproxy.go
+@@ -13,6 +13,9 @@
+ )
+ 
+ func listenAndServeInternalModuleProxy() {
++	// OpenRefactory Warning:
++	// ListenAndServe does not set any timeout which may cause
++	// server to wait indefinitely.
+ 	err := http.ListenAndServe(":8123", http.HandlerFunc(proxyModuleCache))
+ 	log.Fatalf("error running internal module proxy: %v", err)
+ }

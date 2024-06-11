@@ -1,0 +1,21 @@
+--- /workspace/source/cmd/genbotcert/genbotcert.go
++++ /workspace/source/cmd/genbotcert/genbotcert.go
+@@ -138,6 +138,18 @@
+ 	if err != nil {
+ 		return fmt.Errorf("CreateCertificate failed: %w", err)
+ 	}
++	// OpenRefactory Warning:
++	// Possible Sensitive Data Leak!
++	// Path:
++	//	File: genbotcert.go, Line: 115
++	//		certID := fmt.Sprintf("%s-%d", hostname, time.Now().Unix())
++	//		Variable 'certID' is assigned a tainted value.
++	//	File: genbotcert.go, Line: 124
++	//		req := &privatecapb.CreateCertificateRequest{
++	//		Variable 'req' is assigned a tainted value from the initialization of Field 'CertificateId' (from type CreateCertificateRequest).
++	//	File: genbotcert.go, Line: 141
++	//		log.Printf("Certificate %s created", certID)
++	//		Tainted information is used in a sink.
+ 	log.Printf("Certificate %s created", certID)
+ 	if err := os.WriteFile(certID+".cert", []byte(resp.PemCertificate), 0600); err != nil {
+ 		return fmt.Errorf("unable to write certificate to disk: %s", err)

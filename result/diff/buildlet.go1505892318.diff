@@ -1,0 +1,33 @@
+--- /workspace/source/cmd/buildlet/buildlet.go
++++ /workspace/source/cmd/buildlet/buildlet.go
+@@ -972,6 +972,30 @@
+ 	cmd.Stdout = cmdOutput
+ 	cmd.Stderr = cmdOutput
+ 
++	// OpenRefactory Warning:
++	// Possible Log Injection!
++	// Path:
++	//	File: buildlet.go, Line: 919
++	//		r.FormValue("cmd")
++	//		Tainted information is coming from an external source.
++	//	File: buildlet.go, Line: 1019
++	//		return filepath.Clean(cmdArg), nil
++	//		A tainted value is returned from the function call.
++	//	File: buildlet.go, Line: 1022
++	//		relCmd, err := nativeRelPath(cmdArg)
++	//		Variable 'relCmd' is assigned a tainted value.
++	//	File: buildlet.go, Line: 919
++	//		absCmd, err := absExecCmd(r.FormValue("cmd"), sysMode)
++	//		Variable 'absCmd' is assigned a tainted value.
++	//	File: buildlet.go, Line: 925
++	//		absDir, err := absExecDir(r.FormValue("dir"), sysMode, filepath.Dir(absCmd))
++	//		Variable 'absDir' is assigned a tainted value.
++	//	File: buildlet.go, Line: 966
++	//		cmd = exec.Command(absCmd)
++	//		Variable 'cmd' is assigned a tainted value which is passed through a function call.
++	//	File: buildlet.go, Line: 975
++	//		log.Printf("[%p] Running %s with args %q and env %q in dir %s",
++	//		Tainted information is used in a sink.
+ 	log.Printf("[%p] Running %s with args %q and env %q in dir %s",
+ 		cmd, cmd.Path, cmd.Args, cmd.Env, cmd.Dir)
+ 

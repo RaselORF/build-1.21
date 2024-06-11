@@ -1,0 +1,11 @@
+--- /workspace/source/build.go
++++ /workspace/source/build.go
+@@ -54,6 +54,8 @@
+ 	var err error
+ 	ca := ci.CACert()
+ 	if ci == "" {
++		// OpenRefactory Warning:
++		// Setting InsecureSkipVerify to true will disable certificate verification.
+ 		tlsConf.InsecureSkipVerify = true // in localhost dev mode
+ 	} else {
+ 		if !caPool.AppendCertsFromPEM([]byte(ca)) {

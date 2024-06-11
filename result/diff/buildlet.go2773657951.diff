@@ -1,0 +1,27 @@
+--- /workspace/source/cmd/buildlet/buildlet.go
++++ /workspace/source/cmd/buildlet/buildlet.go
+@@ -1862,6 +1862,24 @@
+ 		return err
+ 	}
+ 	authFile := filepath.Join(sshDir, "authorized_keys")
++	// OpenRefactory Warning:
++	// Possible Path Manipulation!
++	// Path:
++	//	File: buildlet.go, Line: 1466
++	//		sshUser := r.Header.Get("X-Go-Ssh-User")
++	//		Variable 'sshUser' is assigned a tainted value from an external source.
++	//	File: buildlet.go, Line: 1469
++	//		appendSSHAuthorizedKey(sshUser, authKey)
++	//		Tainted information is passed through the function call via 'sshUser' to the parameter 'sshUser'
++	//	File: buildlet.go, Line: 1857
++	//		sshDir := filepath.Join(homeRoot, sshUser, ".ssh")
++	//		Variable 'sshDir' is assigned a tainted value which is passed through a function call.
++	//	File: buildlet.go, Line: 1864
++	//		authFile := filepath.Join(sshDir, "authorized_keys")
++	//		Variable 'authFile' is assigned a tainted value which is passed through a function call.
++	//	File: buildlet.go, Line: 1865
++	//		os.ReadFile(authFile)
++	//		Tainted information is used in a sink.
+ 	exist, err := os.ReadFile(authFile)
+ 	if err != nil && !os.IsNotExist(err) {
+ 		return err

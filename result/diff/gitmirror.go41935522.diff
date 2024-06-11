@@ -1,0 +1,10 @@
+--- /workspace/source/cmd/gitmirror/gitmirror.go
++++ /workspace/source/cmd/gitmirror/gitmirror.go
+@@ -108,6 +108,7 @@
+ 	}
+ 
+ 	for _, repo := range m.repos {
++		repo := repo
+ 		go repo.loop()
+ 	}
+ 	go m.pollGerritAndTickleLoop()

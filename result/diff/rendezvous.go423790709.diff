@@ -1,0 +1,21 @@
+--- /workspace/source/internal/rendezvous/rendezvous.go
++++ /workspace/source/internal/rendezvous/rendezvous.go
+@@ -169,6 +169,18 @@
+ 		return
+ 	}
+ 	if !rdv.validator(r.Context(), authToken) {
++		// OpenRefactory Warning:
++		// Possible Log Injection!
++		// Path:
++		//	File: rendezvous.go, Line: 147
++		//		id = r.Header.Get(HeaderID)
++		//		Variable 'id' is assigned a tainted value from an external source.
++		//	File: rendezvous.go, Line: 164
++		//		rdv.m[id]
++		//		Map key 'id' is assigned a tainted value.
++		//	File: rendezvous.go, Line: 172
++		//		log.Printf("rendezvous: Unable to validate authentication token id=%s", id)
++		//		Tainted information is used in a sink.
+ 		log.Printf("rendezvous: Unable to validate authentication token id=%s", id)
+ 		http.Error(w, "invalid authentication Token", http.StatusPreconditionFailed)
+ 		return
